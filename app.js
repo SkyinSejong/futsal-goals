@@ -36,6 +36,54 @@
   const $ = (id) => document.getElementById(id);
   const labelOf = (p) => (p === UNKNOWN ? "미상(???)" : p);
 
+  // ---- 페이지 내 유튜브 플레이어 ----
+  // iframe API 는 비동기 로드된다. 준비 전 클릭은 pending 에 담아 두었다가 재생한다.
+  let player = null;
+  let playerReady = false;
+  let currentVideoId = null;
+  let pending = null;
+
+  function playGoal(video, t, label) {
+    $("npTitle").textContent = video.title;
+    $("npGoal").textContent = label || "";
+    if (!playerReady) {
+      pending = { video, t };
+      return;
+    }
+    if (currentVideoId === video.id) {
+      player.seekTo(t, true);
+      player.playVideo();
+    } else {
+      currentVideoId = video.id;
+      player.loadVideoById({ videoId: video.id, startSeconds: t });
+    }
+    document.querySelector(".player-dock").scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    const first = videos[0];
+    player = new YT.Player("player", {
+      width: "100%",
+      height: "100%",
+      videoId: first ? first.id : "",
+      playerVars: { playsinline: 1, rel: 0 },
+      events: {
+        onReady: function () {
+          playerReady = true;
+          currentVideoId = first ? first.id : null;
+          if (pending) {
+            const { video, t } = pending;
+            pending = null;
+            playGoal(video, t);
+          }
+        },
+      },
+    });
+  };
+
   // ---- 상단 통계 ----
   function renderStats() {
     const cards = [
@@ -93,10 +141,6 @@
   }
 
   // ---- 골 목록 ----
-  function youtubeLink(video, t) {
-    return `${video.url}${video.url.includes("?") ? "&" : "?"}t=${t}s`;
-  }
-
   function renderList() {
     const box = $("goalList");
     box.innerHTML = "";
@@ -117,7 +161,10 @@
       head.innerHTML =
         `<div><div class="vg-title">${v.title}</div>` +
         `<div class="vg-meta">${v.date} · 골 ${goals.length}</div></div>` +
-        `<a class="vg-open" href="${v.url}" target="_blank" rel="noopener">영상 열기</a>`;
+        `<button type="button" class="vg-open">처음부터 재생</button>`;
+      head
+        .querySelector(".vg-open")
+        .addEventListener("click", () => playGoal(v, 0, "처음부터"));
       group.appendChild(head);
 
       for (const g of goals) {
@@ -131,7 +178,7 @@
           (g.hidden ? `<span class="tag-hidden">안보임</span>` : "") +
           `<span class="play-hint">재생 ›</span>`;
         row.addEventListener("click", () =>
-          window.open(youtubeLink(v, g.t), "_blank", "noopener")
+          playGoal(v, g.t, `${labelOf(g.player)} · ${g.ts}`)
         );
         group.appendChild(row);
       }
