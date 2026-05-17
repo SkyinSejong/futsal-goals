@@ -21,6 +21,18 @@
     </div>
   </header>
 
+  <div class="player-dock">
+    <div class="wrap">
+      <div class="player-frame">
+        <iframe id="player" title="유튜브 플레이어" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <div class="now-playing">
+        <span id="npTitle">골 장면을 선택하면 여기에서 재생됩니다</span>
+        <span id="npGoal" class="np-goal"></span>
+      </div>
+    </div>
+  </div>
+
   <main class="wrap layout">
     <aside class="panel side">
       <div class="panel-block">
@@ -41,13 +53,6 @@
     </aside>
 
     <section class="content">
-      <div class="player-dock">
-        <div class="player-frame"><div id="player"></div></div>
-        <div class="now-playing">
-          <span id="npTitle">골 장면을 선택하면 여기에서 재생됩니다</span>
-          <span id="npGoal" class="np-goal"></span>
-        </div>
-      </div>
       <div class="content-head">
         <h2 id="resultTitle">전체 골 장면</h2>
         <span id="resultCount" class="result-count"></span>
@@ -64,7 +69,6 @@
   </footer>
 
   <script src="data.js"></script>
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script src="app.js"></script>
 </body>
 </html>

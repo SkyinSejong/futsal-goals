@@ -37,52 +37,36 @@
   const labelOf = (p) => (p === UNKNOWN ? "미상(???)" : p);
 
   // ---- 페이지 내 유튜브 플레이어 ----
-  // iframe API 는 비동기 로드된다. 준비 전 클릭은 pending 에 담아 두었다가 재생한다.
-  let player = null;
-  let playerReady = false;
-  let currentVideoId = null;
-  let pending = null;
+  // IFrame API 는 file:// 에서 origin 이 null 이라 동작하지 않는다.
+  // iframe src 를 직접 교체하는 방식은 로컬·배포 모두 확실히 동작한다.
+  const playerEl = $("player");
+
+  function embedUrl(id, t, autoplay) {
+    const p = new URLSearchParams({
+      rel: "0",
+      playsinline: "1",
+      modestbranding: "1",
+    });
+    if (t > 0) p.set("start", String(Math.floor(t)));
+    if (autoplay) p.set("autoplay", "1");
+    return `https://www.youtube-nocookie.com/embed/${id}?${p}`;
+  }
 
   function playGoal(video, t, label) {
     $("npTitle").textContent = video.title;
     $("npGoal").textContent = label || "";
-    if (!playerReady) {
-      pending = { video, t };
-      return;
-    }
-    if (currentVideoId === video.id) {
-      player.seekTo(t, true);
-      player.playVideo();
-    } else {
-      currentVideoId = video.id;
-      player.loadVideoById({ videoId: video.id, startSeconds: t });
-    }
+    playerEl.src = embedUrl(video.id, t, true);
     document.querySelector(".player-dock").scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
   }
 
-  window.onYouTubeIframeAPIReady = function () {
-    const first = videos[0];
-    player = new YT.Player("player", {
-      width: "100%",
-      height: "100%",
-      videoId: first ? first.id : "",
-      playerVars: { playsinline: 1, rel: 0 },
-      events: {
-        onReady: function () {
-          playerReady = true;
-          currentVideoId = first ? first.id : null;
-          if (pending) {
-            const { video, t } = pending;
-            pending = null;
-            playGoal(video, t);
-          }
-        },
-      },
-    });
-  };
+  // 첫 진입 시 최신 영상을 자동재생 없이 미리 띄워 둔다.
+  if (videos[0]) {
+    playerEl.src = embedUrl(videos[0].id, 0, false);
+    $("npTitle").textContent = videos[0].title;
+  }
 
   // ---- 상단 통계 ----
   function renderStats() {
