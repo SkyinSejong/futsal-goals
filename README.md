@@ -38,7 +38,16 @@ GitHub Pages 로 무료 호스팅하며, 서버가 필요 없습니다.
 
 ## 로컬 미리보기
 
-`data.js` 를 스크립트로 불러오므로 별도 서버 없이 `index.html` 을 브라우저로 열어도 동작합니다.
+데이터/필터/순위는 `index.html` 을 그냥 열어도 보이지만, **유튜브 영상 재생은 반드시
+`http://localhost` 로 열어야 합니다.** `file://` 로 열면 페이지 origin 이 `null` 이라
+유튜브가 임베드를 거부해 "오류 153" 이 납니다. (GitHub Pages 는 https 라 정상 동작합니다.)
+
+```
+cd "futsal-goals"
+node serve.mjs            # 기본 포트 8080
+```
+
+브라우저에서 `http://localhost:8080` 접속. 종료는 Ctrl+C.
 
 ## GitHub Pages 배포
 

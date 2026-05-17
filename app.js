@@ -41,31 +41,29 @@
   // iframe src 를 직접 교체하는 방식은 로컬·배포 모두 확실히 동작한다.
   const playerEl = $("player");
 
-  function embedUrl(id, t, autoplay) {
+  const placeholderEl = $("playerPlaceholder");
+
+  function embedUrl(id, t) {
     const p = new URLSearchParams({
       rel: "0",
       playsinline: "1",
       modestbranding: "1",
+      autoplay: "1",
     });
     if (t > 0) p.set("start", String(Math.floor(t)));
-    if (autoplay) p.set("autoplay", "1");
     return `https://www.youtube-nocookie.com/embed/${id}?${p}`;
   }
 
+  // 어떤 영상도 미리 고정하지 않는다. 골을 클릭해야만 그 영상을 로드한다.
   function playGoal(video, t, label) {
     $("npTitle").textContent = video.title;
     $("npGoal").textContent = label || "";
-    playerEl.src = embedUrl(video.id, t, true);
+    if (placeholderEl) placeholderEl.hidden = true;
+    playerEl.src = embedUrl(video.id, t);
     document.querySelector(".player-dock").scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
-  }
-
-  // 첫 진입 시 최신 영상을 자동재생 없이 미리 띄워 둔다.
-  if (videos[0]) {
-    playerEl.src = embedUrl(videos[0].id, 0, false);
-    $("npTitle").textContent = videos[0].title;
   }
 
   // ---- 상단 통계 ----
