@@ -45,7 +45,7 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
 }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand-logo {
-  height: 34px;
+  height: 52px;
   width: auto;
   display: block;
   flex-shrink: 0;
@@ -156,14 +156,20 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
   cursor: pointer;
   font: inherit;
   color: inherit;
+  text-align: left;
+  gap: 8px;
 }
+.panel-head.toggle h2 { flex: 1; }
+.hd-count { font-size: 13px; color: var(--muted); font-weight: 600; }
 .collapsible .panel-head.toggle { margin-bottom: 0; }
 .collapsible.open .panel-head.toggle { margin-bottom: 12px; }
 .toggle-ind {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--muted);
+  flex-shrink: 0;
 }
+.collapse-body[hidden] { display: none; }
 .leaderboard[hidden] { display: none; }
 .lb-section { margin: 0 auto 36px; }
 .link-btn {
@@ -384,7 +390,7 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
     padding-top: 16px;
     padding-bottom: 16px;
   }
-  .brand-logo { height: 40px; }
+  .brand-logo { height: 72px; }
   .brand h1 { font-size: 20px; }
   .tagline { font-size: 13px; }
   .stats { display: flex; gap: 10px; }

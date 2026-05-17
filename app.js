@@ -229,24 +229,23 @@
 
   // ---- 화면 렌더 분기 ----
   function render() {
-    const grid = $("videoGrid");
+    const vgBlock = $("vgBlock");
+    const goalHead = $("goalHead");
     const listBox = $("goalList");
     const empty = $("emptyState");
-    const back = $("backToList");
 
     if (scope === null) {
       renderVideoGrid();
-      grid.hidden = false;
+      $("vgCount").textContent = `${videos.length}개 영상`;
+      vgBlock.hidden = false;
+      goalHead.hidden = true;
       listBox.hidden = true;
       empty.hidden = true;
-      back.hidden = true;
-      $("resultTitle").textContent = "영상 목록";
-      $("resultCount").textContent = `${videos.length}개 영상`;
       return;
     }
 
-    back.hidden = false;
-    grid.hidden = true;
+    vgBlock.hidden = true;
+    goalHead.hidden = false;
     listBox.hidden = false;
     const shown = renderGoalGroups();
 
@@ -284,14 +283,23 @@
   $("playerSearch").addEventListener("input", renderChips);
   $("backToList").addEventListener("click", () => setScope(null));
 
-  // 득점 순위: 기본 접힘, 헤더를 눌러야 펼쳐짐
-  $("lbToggle").addEventListener("click", () => {
-    const willOpen = $("leaderboard").hidden;
-    $("leaderboard").hidden = !willOpen;
-    $("lbBlock").classList.toggle("open", willOpen);
-    $("lbToggle").setAttribute("aria-expanded", String(willOpen));
-    $("lbInd").textContent = willOpen ? "접기" : "펼치기";
-  });
+  // ---- 공통 접기/펼치기 (삼각형 ▼ 접힘 / ▲ 펼침) ----
+  function initCollapsibles() {
+    document.querySelectorAll(".collapsible").forEach((block) => {
+      const btn = block.querySelector(".panel-head.toggle");
+      const body = block.querySelector(".collapse-body");
+      const ind = block.querySelector(".toggle-ind");
+      const apply = (collapsed) => {
+        body.hidden = collapsed;
+        block.classList.toggle("open", !collapsed);
+        btn.setAttribute("aria-expanded", String(!collapsed));
+        ind.textContent = collapsed ? "▼" : "▲";
+      };
+      apply(block.dataset.collapsed === "true");
+      btn.addEventListener("click", () => apply(!body.hidden));
+    });
+  }
+  initCollapsibles();
 
   renderStats();
   renderChips();

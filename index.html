@@ -39,42 +39,60 @@
 
   <main class="wrap layout">
     <aside class="panel side">
-      <div class="panel-block">
-        <div class="panel-head">
+      <div class="panel-block collapsible" data-collapsed="false">
+        <button type="button" class="panel-head toggle" aria-expanded="true">
           <h2>영상 선택</h2>
+          <span class="toggle-ind" aria-hidden="true"></span>
+        </button>
+        <div class="collapse-body">
+          <div id="videoNav" class="video-nav"></div>
         </div>
-        <div id="videoNav" class="video-nav"></div>
       </div>
 
-      <div class="panel-block">
-        <div class="panel-head">
+      <div class="panel-block collapsible" data-collapsed="true">
+        <button type="button" class="panel-head toggle" aria-expanded="false">
           <h2>선수 필터</h2>
+          <span class="toggle-ind" aria-hidden="true"></span>
+        </button>
+        <div class="collapse-body">
           <button id="resetFilter" class="link-btn" type="button">전체 보기</button>
+          <input id="playerSearch" class="search" type="search" placeholder="선수 이름 검색" autocomplete="off" />
+          <div id="playerChips" class="chips"></div>
         </div>
-        <input id="playerSearch" class="search" type="search" placeholder="선수 이름 검색" autocomplete="off" />
-        <div id="playerChips" class="chips"></div>
       </div>
     </aside>
 
     <section class="content">
-      <div class="content-head">
-        <button id="backToList" class="back-link" type="button" hidden>← 영상 목록</button>
-        <h2 id="resultTitle">영상 목록</h2>
+      <div class="panel-block collapsible" id="vgBlock" data-collapsed="true" hidden>
+        <button type="button" class="panel-head toggle" aria-expanded="false">
+          <h2>영상 목록</h2>
+          <span class="hd-count" id="vgCount"></span>
+          <span class="toggle-ind" aria-hidden="true"></span>
+        </button>
+        <div class="collapse-body">
+          <div id="videoGrid" class="video-grid"></div>
+        </div>
+      </div>
+
+      <div class="content-head" id="goalHead" hidden>
+        <button id="backToList" class="back-link" type="button">← 영상 목록</button>
+        <h2 id="resultTitle"></h2>
         <span id="resultCount" class="result-count"></span>
       </div>
-      <div id="videoGrid" class="video-grid" hidden></div>
       <div id="goalList" class="goal-list"></div>
       <p id="emptyState" class="empty" hidden>선택한 선수의 골 장면이 없습니다.</p>
     </section>
   </main>
 
   <section class="wrap lb-section">
-    <div class="panel-block collapsible" id="lbBlock">
-      <button type="button" class="panel-head toggle" id="lbToggle" aria-expanded="false" aria-controls="leaderboard">
+    <div class="panel-block collapsible" data-collapsed="true">
+      <button type="button" class="panel-head toggle" aria-expanded="false">
         <h2>득점 순위</h2>
-        <span class="toggle-ind" id="lbInd">펼치기</span>
+        <span class="toggle-ind" aria-hidden="true"></span>
       </button>
-      <ol id="leaderboard" class="leaderboard" hidden></ol>
+      <div class="collapse-body">
+        <ol id="leaderboard" class="leaderboard"></ol>
+      </div>
     </div>
   </section>
 
