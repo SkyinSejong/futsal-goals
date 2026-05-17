@@ -248,8 +248,22 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
 /* Content */
 .content-head {
   display: flex; align-items: baseline; gap: 10px;
+  flex-wrap: wrap;
   margin-bottom: 14px;
 }
+.back-link {
+  flex-basis: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  margin-bottom: 2px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.back-link[hidden] { display: none; }
 .content-head h2 { font-size: 17px; font-weight: 800; }
 .result-count { color: var(--muted); font-size: 14px; }
 
@@ -337,6 +351,7 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
   .vn-item:hover { border-color: var(--accent); }
   .vn-item.active:hover { border-color: var(--accent); }
   .video-card:hover { border-color: var(--accent); }
+  .back-link:hover { text-decoration: underline; }
   .goal-row:hover { background: var(--accent-soft); }
   .lb-row:hover .lb-name { color: var(--accent-strong); }
   .vg-open:hover { border-color: var(--accent); background: var(--accent-soft); }

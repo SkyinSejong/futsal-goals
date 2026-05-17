@@ -142,7 +142,6 @@
     const box = $("videoNav");
     box.innerHTML = "";
     const items = [
-      { key: null, title: "영상 목록", meta: `${videos.length}개 영상` },
       { key: ALL, title: "전체 영상", meta: `골 ${allGoals}` },
       ...videos.map((v) => ({
         key: v.id,
@@ -233,17 +232,20 @@
     const grid = $("videoGrid");
     const listBox = $("goalList");
     const empty = $("emptyState");
+    const back = $("backToList");
 
     if (scope === null) {
       renderVideoGrid();
       grid.hidden = false;
       listBox.hidden = true;
       empty.hidden = true;
+      back.hidden = true;
       $("resultTitle").textContent = "영상 목록";
       $("resultCount").textContent = `${videos.length}개 영상`;
       return;
     }
 
+    back.hidden = false;
     grid.hidden = true;
     listBox.hidden = false;
     const shown = renderGoalGroups();
@@ -280,6 +282,7 @@
 
   $("resetFilter").addEventListener("click", reset);
   $("playerSearch").addEventListener("input", renderChips);
+  $("backToList").addEventListener("click", () => setScope(null));
 
   renderStats();
   renderChips();
