@@ -41,6 +41,13 @@
     <aside class="panel side">
       <div class="panel-block">
         <div class="panel-head">
+          <h2>영상 선택</h2>
+        </div>
+        <div id="videoNav" class="video-nav"></div>
+      </div>
+
+      <div class="panel-block">
+        <div class="panel-head">
           <h2>선수 필터</h2>
           <button id="resetFilter" class="link-btn" type="button">전체 보기</button>
         </div>
@@ -61,6 +68,7 @@
         <h2 id="resultTitle">전체 골 장면</h2>
         <span id="resultCount" class="result-count"></span>
       </div>
+      <div id="videoGrid" class="video-grid" hidden></div>
       <div id="goalList" class="goal-list"></div>
       <p id="emptyState" class="empty" hidden>선택한 선수의 골 장면이 없습니다.</p>
     </section>

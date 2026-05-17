@@ -193,6 +193,44 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
 .chip.active .c-count { background: rgba(255, 255, 255, 0.25); color: #fff; }
 .chip.unknown { font-style: italic; }
 
+/* 영상 선택 (사이드) */
+.video-nav { display: flex; flex-direction: column; gap: 6px; }
+.vn-item {
+  display: flex; flex-direction: column; gap: 2px;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+.vn-title { font-weight: 600; font-size: 14px; }
+.vn-meta { font-size: 12px; color: var(--muted); }
+.vn-item.active { background: var(--accent); border-color: var(--accent); }
+.vn-item.active .vn-title,
+.vn-item.active .vn-meta { color: #fff; }
+
+/* 영상 목록 카드 (본문) */
+.video-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.video-card {
+  display: flex; flex-direction: column; gap: 4px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  cursor: pointer;
+}
+.vc-title { font-weight: 700; font-size: 16px; }
+.vc-meta { font-size: 13px; color: var(--muted); }
+.vc-goals {
+  font-size: 13px; font-weight: 700; color: var(--accent-strong);
+  margin-top: 2px;
+}
+.vc-go { font-size: 13px; color: var(--accent); font-weight: 600; margin-top: 6px; }
+
 /* Leaderboard */
 .leaderboard { list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .lb-row { cursor: pointer; padding: 5px 0; }
@@ -296,6 +334,9 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
 /* 마우스 환경에서만 hover 효과 (모바일 sticky-hover 방지) */
 @media (hover: hover) {
   .chip:hover { border-color: var(--accent); }
+  .vn-item:hover { border-color: var(--accent); }
+  .vn-item.active:hover { border-color: var(--accent); }
+  .video-card:hover { border-color: var(--accent); }
   .goal-row:hover { background: var(--accent-soft); }
   .lb-row:hover .lb-name { color: var(--accent-strong); }
   .vg-open:hover { border-color: var(--accent); background: var(--accent-soft); }
@@ -347,4 +388,5 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
   .panel-block { padding: 18px; }
   .chips { max-height: 340px; overflow-y: auto; }
   .content-head h2 { font-size: 18px; }
+  .video-grid { grid-template-columns: 1fr 1fr; }
 }

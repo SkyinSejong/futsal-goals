@@ -122,13 +122,72 @@
     });
   }
 
-  // ---- 골 목록 ----
-  function renderList() {
+  // ---- 영상 선택 상태 ----
+  // scope: null = 영상 목록 화면, "ALL" = 전체 영상 통합, 그 외 = 해당 영상 id
+  let scope = null;
+  const ALL = "ALL";
+
+  function setScope(next) {
+    scope = next;
+    renderVideoNav();
+    render();
+    document.querySelector(".content-head").scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
+  // ---- 사이드: 영상 선택 목록 ----
+  function renderVideoNav() {
+    const box = $("videoNav");
+    box.innerHTML = "";
+    const items = [
+      { key: null, title: "영상 목록", meta: `${videos.length}개 영상` },
+      { key: ALL, title: "전체 영상", meta: `골 ${allGoals}` },
+      ...videos.map((v) => ({
+        key: v.id,
+        title: v.title,
+        meta: `${v.date} · 골 ${v.goals.length}`,
+      })),
+    ];
+    for (const it of items) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "vn-item" + (scope === it.key ? " active" : "");
+      btn.innerHTML =
+        `<span class="vn-title">${it.title}</span>` +
+        `<span class="vn-meta">${it.meta}</span>`;
+      btn.addEventListener("click", () => setScope(it.key));
+      box.appendChild(btn);
+    }
+  }
+
+  // ---- 영상 목록 카드 (scope=null) ----
+  function renderVideoGrid() {
+    const box = $("videoGrid");
+    box.innerHTML = "";
+    for (const v of videos) {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "video-card";
+      card.innerHTML =
+        `<span class="vc-title">${v.title}</span>` +
+        `<span class="vc-meta">${v.date}</span>` +
+        `<span class="vc-goals">골 ${v.goals.length}개</span>` +
+        `<span class="vc-go">골 목록 보기 ›</span>`;
+      card.addEventListener("click", () => setScope(v.id));
+      box.appendChild(card);
+    }
+  }
+
+  // ---- 골 목록 (scope=ALL 또는 특정 영상) ----
+  function renderGoalGroups() {
     const box = $("goalList");
     box.innerHTML = "";
+    const list = scope === ALL ? videos : videos.filter((v) => v.id === scope);
     let shown = 0;
 
-    for (const v of videos) {
+    for (const v of list) {
       const goals = v.goals
         .filter((g) => selected.size === 0 || selected.has(g.player))
         .sort((a, b) => a.t - b.t);
@@ -166,27 +225,57 @@
       }
       box.appendChild(group);
     }
+    return shown;
+  }
 
-    const names = [...selected].map(labelOf);
-    $("resultTitle").textContent =
-      selected.size === 0 ? "전체 골 장면" : `${names.join(", ")} 골 장면`;
+  // ---- 화면 렌더 분기 ----
+  function render() {
+    const grid = $("videoGrid");
+    const listBox = $("goalList");
+    const empty = $("emptyState");
+
+    if (scope === null) {
+      renderVideoGrid();
+      grid.hidden = false;
+      listBox.hidden = true;
+      empty.hidden = true;
+      $("resultTitle").textContent = "영상 목록";
+      $("resultCount").textContent = `${videos.length}개 영상`;
+      return;
+    }
+
+    grid.hidden = true;
+    listBox.hidden = false;
+    const shown = renderGoalGroups();
+
+    if (scope === ALL) {
+      const names = [...selected].map(labelOf);
+      $("resultTitle").textContent =
+        selected.size === 0 ? "전체 골 장면" : `${names.join(", ")} 골 장면`;
+    } else {
+      const v = videos.find((x) => x.id === scope);
+      $("resultTitle").textContent = v ? v.title : "골 장면";
+    }
     $("resultCount").textContent = `${shown}골`;
-    $("emptyState").hidden = shown !== 0;
+    empty.hidden = shown !== 0;
   }
 
   // ---- 상태 변경 ----
   function toggle(p) {
     if (selected.has(p)) selected.delete(p);
     else selected.add(p);
+    // 영상 목록 화면에서 선수를 고르면 전체 영상 교차 검색으로 전환
+    if (scope === null) scope = ALL;
     renderChips();
-    renderList();
+    renderVideoNav();
+    render();
   }
 
   function reset() {
     selected.clear();
     $("playerSearch").value = "";
     renderChips();
-    renderList();
+    render();
   }
 
   $("resetFilter").addEventListener("click", reset);
@@ -195,5 +284,6 @@
   renderStats();
   renderChips();
   renderLeaderboard();
-  renderList();
+  renderVideoNav();
+  render();
 })();
