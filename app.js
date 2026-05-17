@@ -284,6 +284,15 @@
   $("playerSearch").addEventListener("input", renderChips);
   $("backToList").addEventListener("click", () => setScope(null));
 
+  // 득점 순위: 기본 접힘, 헤더를 눌러야 펼쳐짐
+  $("lbToggle").addEventListener("click", () => {
+    const willOpen = $("leaderboard").hidden;
+    $("leaderboard").hidden = !willOpen;
+    $("lbBlock").classList.toggle("open", willOpen);
+    $("lbToggle").setAttribute("aria-expanded", String(willOpen));
+    $("lbInd").textContent = willOpen ? "접기" : "펼치기";
+  });
+
   renderStats();
   renderChips();
   renderLeaderboard();

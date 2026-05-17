@@ -152,6 +152,22 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
   margin-bottom: 12px;
 }
 .panel-head h2 { font-size: 15px; font-weight: 700; }
+.panel-head.toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.collapsible .panel-head.toggle { margin-bottom: 0; }
+.collapsible.open .panel-head.toggle { margin-bottom: 12px; }
+.toggle-ind {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.leaderboard[hidden] { display: none; }
 .link-btn {
   background: none; border: none; cursor: pointer;
   color: var(--accent); font-size: 13px; font-weight: 600;
