@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>풋살 골 모음 — 선수별 골 장면 탐색</title>
+  <meta name="description" content="풋살 유튜브 채널의 모든 골 장면을 선수별로 필터링하여 탐색합니다." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="brand">
+        <span class="brand-mark">FG</span>
+        <div>
+          <h1>풋살 골 모음</h1>
+          <p class="tagline">선수를 선택하면 그 선수의 골 장면만 모아 봅니다</p>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <aside class="panel side">
+      <div class="panel-block">
+        <div class="panel-head">
+          <h2>선수 필터</h2>
+          <button id="resetFilter" class="link-btn" type="button">전체 보기</button>
+        </div>
+        <input id="playerSearch" class="search" type="search" placeholder="선수 이름 검색" autocomplete="off" />
+        <div id="playerChips" class="chips"></div>
+      </div>
+
+      <div class="panel-block">
+        <div class="panel-head">
+          <h2>득점 순위</h2>
+        </div>
+        <ol id="leaderboard" class="leaderboard"></ol>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div class="content-head">
+        <h2 id="resultTitle">전체 골 장면</h2>
+        <span id="resultCount" class="result-count"></span>
+      </div>
+      <div id="goalList" class="goal-list"></div>
+      <p id="emptyState" class="empty" hidden>선택한 선수의 골 장면이 없습니다.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>타임스탬프를 누르면 해당 골 장면부터 유튜브 영상이 재생됩니다.</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
