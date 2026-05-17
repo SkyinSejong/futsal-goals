@@ -4,7 +4,7 @@ window.DATA = {
     {
       "id": "7_cJyR2iU54",
       "url": "https://www.youtube.com/watch?v=7_cJyR2iU54",
-      "title": "7v7/6v6 정기전",
+      "title": "26년 5월 14일",
       "date": "2026-05-17",
       "goals": [
         {

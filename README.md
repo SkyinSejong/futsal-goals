@@ -15,11 +15,15 @@ GitHub Pages 로 무료 호스팅하며, 서버가 필요 없습니다.
 ## 새 영상 추가하는 법
 
 1. 영상의 타임스탬프 블록을 `raw/<videoId>.txt` 로 저장한다. (Plan2.md 와 같은 형식)
-2. 아래 명령을 실행한다.
+2. 아래 명령을 실행한다. (영상 제목은 유튜브에서 자동으로 가져온다)
 
    ```
-   node parse.mjs "https://www.youtube.com/watch?v=영상ID" "raw/영상ID.txt" --title "경기 제목" --date 2026-05-17
+   node parse.mjs "https://www.youtube.com/watch?v=영상ID" "raw/영상ID.txt" --date 2026-05-17
    ```
+
+   - `--title "직접 제목"` : (선택) 유튜브 제목 대신 수동 지정. 안 주면 유튜브 제목 사용
+   - `--date YYYY-MM-DD` : (선택) 안 주면 실행일. oEmbed 는 업로드 날짜를 주지 않아 날짜는 수동
+   - 온라인이 아니거나 비공개 영상이면 임시 제목으로 저장되고 경고가 뜸 → 온라인에서 같은 명령 재실행하면 제목만 갱신됨
 
 3. `data.js` 가 갱신되면 커밋/푸시한다. GitHub Pages 가 자동 배포한다.
 

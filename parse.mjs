@@ -85,7 +85,30 @@ function saveData(dataPath, data) {
   writeFileSync(dataPath, banner + "window.DATA = " + JSON.stringify(data, null, 2) + ";\n", "utf8");
 }
 
-function main() {
+// 유튜브 oEmbed 로 실제 영상 제목을 가져온다. API 키 불필요.
+// 실패(오프라인/비공개/존재하지 않는 영상) 시 null 을 반환한다.
+export async function fetchTitle(videoId) {
+  if (typeof fetch !== "function") return null; // Node 18+ 필요
+  const api =
+    "https://www.youtube.com/oembed?format=json&url=" +
+    encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const res = await fetch(api, { signal: ctrl.signal });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return typeof json.title === "string" && json.title.trim()
+      ? json.title.trim()
+      : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function main() {
   const args = process.argv.slice(2);
   if (args.length < 2) {
     console.error('사용법: node parse.mjs <videoUrl> <rawFile> [--title "제목"] [--date YYYY-MM-DD]');
@@ -105,12 +128,30 @@ function main() {
   if (!existsSync(rawDir)) mkdirSync(rawDir, { recursive: true });
   writeFileSync(join(rawDir, `${videoId}.txt`), rawText, "utf8");
 
+  // 제목: --title 수동 지정이 최우선, 없으면 유튜브 제목 자동 수집,
+  // 그것도 실패하면 임시 제목으로 두고 경고(나중에 재실행하면 갱신).
+  let resolvedTitle = title;
+  let titleSource = "수동 지정";
+  if (!resolvedTitle) {
+    const fetched = await fetchTitle(videoId);
+    if (fetched) {
+      resolvedTitle = fetched;
+      titleSource = "유튜브";
+    } else {
+      resolvedTitle = `정기전 (${videoId})`;
+      titleSource = "임시(제목 수집 실패)";
+      console.warn(
+        `경고: 유튜브 제목을 가져오지 못했습니다. 임시 제목 사용. 온라인에서 재실행하면 갱신됩니다.`
+      );
+    }
+  }
+
   const dataPath = join(ROOT, "data.js");
   const data = loadData(dataPath);
   const entry = {
     id: videoId,
     url: `https://www.youtube.com/watch?v=${videoId}`,
-    title: title || `정기전 (${videoId})`,
+    title: resolvedTitle,
     date,
     goals,
   };
@@ -121,9 +162,15 @@ function main() {
   saveData(dataPath, data);
 
   const identified = goals.filter((g) => g.player !== UNKNOWN).length;
-  console.log(`완료: ${videoId} — 식별 골 ${identified}, 미상 ${goals.length - identified}, 총 ${goals.length}`);
+  console.log(
+    `완료: ${videoId} — 제목 "${resolvedTitle}" [${titleSource}], ` +
+      `식별 골 ${identified}, 미상 ${goals.length - identified}, 총 ${goals.length}`
+  );
 }
 
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("parse.mjs")) {
-  main();
+  main().catch((e) => {
+    console.error("오류:", e.message);
+    process.exit(1);
+  });
 }
