@@ -54,14 +54,6 @@
         <input id="playerSearch" class="search" type="search" placeholder="선수 이름 검색" autocomplete="off" />
         <div id="playerChips" class="chips"></div>
       </div>
-
-      <div class="panel-block collapsible" id="lbBlock">
-        <button type="button" class="panel-head toggle" id="lbToggle" aria-expanded="false" aria-controls="leaderboard">
-          <h2>득점 순위</h2>
-          <span class="toggle-ind" id="lbInd">펼치기</span>
-        </button>
-        <ol id="leaderboard" class="leaderboard" hidden></ol>
-      </div>
     </aside>
 
     <section class="content">
@@ -75,6 +67,16 @@
       <p id="emptyState" class="empty" hidden>선택한 선수의 골 장면이 없습니다.</p>
     </section>
   </main>
+
+  <section class="wrap lb-section">
+    <div class="panel-block collapsible" id="lbBlock">
+      <button type="button" class="panel-head toggle" id="lbToggle" aria-expanded="false" aria-controls="leaderboard">
+        <h2>득점 순위</h2>
+        <span class="toggle-ind" id="lbInd">펼치기</span>
+      </button>
+      <ol id="leaderboard" class="leaderboard" hidden></ol>
+    </div>
+  </section>
 
   <footer class="site-footer">
     <div class="wrap">
