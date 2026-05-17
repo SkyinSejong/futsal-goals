@@ -124,8 +124,10 @@
 
   // ---- 영상 선택 상태 ----
   // scope: null = 영상 목록 화면, "ALL" = 전체 영상 통합, 그 외 = 해당 영상 id
-  let scope = null;
+  // 처음 열면 가장 최근 영상(videos 는 날짜 내림차순)을 기본 선택해
+  // 그 영상의 골/타임스탬프 목록이 바로 펼쳐지게 한다.
   const ALL = "ALL";
+  let scope = videos.length ? videos[0].id : null;
 
   function setScope(next) {
     scope = next;
@@ -284,19 +286,24 @@
   $("backToList").addEventListener("click", () => setScope(null));
 
   // ---- 공통 접기/펼치기 (삼각형 ▼ 접힘 / ▲ 펼침) ----
+  // peek 패널(선수 필터)은 접혀도 본문을 숨기지 않고, 상위 1줄만 보이게
+  // CSS(.peek:not(.open))로 처리한다. 그 외 패널은 본문을 통째로 숨긴다.
   function initCollapsibles() {
     document.querySelectorAll(".collapsible").forEach((block) => {
       const btn = block.querySelector(".panel-head.toggle");
       const body = block.querySelector(".collapse-body");
       const ind = block.querySelector(".toggle-ind");
+      const isPeek = block.classList.contains("peek");
       const apply = (collapsed) => {
-        body.hidden = collapsed;
         block.classList.toggle("open", !collapsed);
+        if (!isPeek) body.hidden = collapsed;
         btn.setAttribute("aria-expanded", String(!collapsed));
         ind.textContent = collapsed ? "▼" : "▲";
       };
       apply(block.dataset.collapsed === "true");
-      btn.addEventListener("click", () => apply(!body.hidden));
+      btn.addEventListener("click", () =>
+        apply(block.classList.contains("open"))
+      );
     });
   }
   initCollapsibles();

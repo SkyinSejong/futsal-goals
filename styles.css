@@ -170,6 +170,15 @@ button, .chip, .goal-row, .lb-row { min-height: 44px; }
   flex-shrink: 0;
 }
 .collapse-body[hidden] { display: none; }
+
+/* 선수 필터(peek): 접혀도 상위 골 선수 1줄은 보이고, 검색창은 숨김 */
+.peek:not(.open) #resetFilter,
+.peek:not(.open) .search { display: none; }
+.peek:not(.open) .chips {
+  max-height: 46px;
+  overflow: hidden;
+}
+.peek.open .chips { max-height: none; overflow: visible; }
 .leaderboard[hidden] { display: none; }
 .lb-section { margin: 0 auto 36px; }
 .link-btn {
