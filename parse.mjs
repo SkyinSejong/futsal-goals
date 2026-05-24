@@ -4,24 +4,38 @@
 //   node parse.mjs <videoUrl> <rawFile> [--title "제목"] [--date YYYY-MM-DD]
 //
 // 동작:
-//   1) raw/<videoId>.txt 로 원본을 보관
-//   2) data.js 의 window.DATA.videos 에 항목을 추가/갱신 (videoId 기준 upsert)
+//   - data.js 의 window.DATA.videos 에 항목을 추가/갱신 (videoId 기준 upsert)
+//   - raw 사본은 만들지 않는다. raw/<날짜>.txt 는 사용자가 직접 작성한다.
 //
 // 파싱 규칙 (Plan2.md 기준, 사용자 확정 사항 반영):
 //   - "(안보임)" 접두어는 카메라가 못 따라갔을 뿐 득점은 인정 -> hidden=true 로만 표시
 //   - 접두어 제거 후 남은 텍스트가 "???" 이면 득점자 미상 -> player="???"
+//   - 남은 텍스트가 "그 외" 이면 식별 불가가 아닌 비주요 득점 묶음 -> player="그 외"
 //   - 남은 텍스트가 공백 없는 단일 토큰이면 선수 이름으로 인정
-//   - 그 외(다중 토큰: "경기 시작 7v7 (1)", "이사 vlog", "박승민 스페셜" 등)는 통계 제외
+//   - 그 외 다중 토큰(예: "경기 시작 7v7 (1)", "이사 vlog", "박승민 스페셜")은 통계 제외
+//   - 선수 이름은 PLAYER_ALIASES 로 정규화 (예: "존" -> "John")
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
 const UNKNOWN = "???";
+const OTHERS = "그 외";
 const TS_RE = /^(\d{1,2}):(\d{2}):(\d{2})\s+(.+?)\s*$/;
 const HIDDEN_RE = /^\(안보임\)\s*/;
+
+// 동일인 표기 통합. 키(원문) -> 값(정식 표기).
+export const PLAYER_ALIASES = {
+  "존": "John",
+};
+
+function normalizePlayer(name) {
+  return Object.prototype.hasOwnProperty.call(PLAYER_ALIASES, name)
+    ? PLAYER_ALIASES[name]
+    : name;
+}
 
 export function extractVideoId(url) {
   const m =
@@ -52,8 +66,10 @@ export function parseLine(line) {
   let player;
   if (label === UNKNOWN) {
     player = UNKNOWN;
+  } else if (label === OTHERS) {
+    player = OTHERS;
   } else if (label.length > 0 && !/\s/.test(label)) {
-    player = label; // 공백 없는 단일 토큰만 선수 이름으로 인정
+    player = normalizePlayer(label); // 공백 없는 단일 토큰만 선수 이름으로 인정
   } else {
     return null; // 다중 토큰 -> 통계 제외 (구간 표시, 스페셜 등)
   }
@@ -124,9 +140,7 @@ async function main() {
   const rawText = readFileSync(rawFile, "utf8");
   const goals = parseRaw(rawText);
 
-  const rawDir = join(ROOT, "raw");
-  if (!existsSync(rawDir)) mkdirSync(rawDir, { recursive: true });
-  writeFileSync(join(rawDir, `${videoId}.txt`), rawText, "utf8");
+  // raw 사본은 만들지 않는다. 사용자가 raw/<날짜>.txt 로 직접 작성한다.
 
   // 제목: --title 수동 지정이 최우선, 없으면 유튜브 제목 자동 수집,
   // 그것도 실패하면 임시 제목으로 두고 경고(나중에 재실행하면 갱신).

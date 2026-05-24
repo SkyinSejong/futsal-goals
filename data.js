@@ -2,9 +2,101 @@
 window.DATA = {
   "videos": [
     {
+      "id": "RERRkNwZA_A",
+      "url": "https://www.youtube.com/watch?v=RERRkNwZA_A",
+      "title": "[4K] 26년 5월 21일",
+      "date": "2026-05-21",
+      "goals": [
+        {
+          "t": 2111,
+          "ts": "00:35:11",
+          "player": "이준영",
+          "hidden": false
+        },
+        {
+          "t": 3585,
+          "ts": "00:59:45",
+          "player": "그 외",
+          "hidden": false
+        },
+        {
+          "t": 3620,
+          "ts": "01:00:20",
+          "player": "이준영",
+          "hidden": false
+        },
+        {
+          "t": 3774,
+          "ts": "01:02:54",
+          "player": "나금철",
+          "hidden": false
+        },
+        {
+          "t": 4621,
+          "ts": "01:17:01",
+          "player": "이준영",
+          "hidden": false
+        },
+        {
+          "t": 4722,
+          "ts": "01:18:42",
+          "player": "이준영",
+          "hidden": false
+        },
+        {
+          "t": 4766,
+          "ts": "01:19:26",
+          "player": "박노영",
+          "hidden": false
+        },
+        {
+          "t": 4839,
+          "ts": "01:20:39",
+          "player": "염지수",
+          "hidden": false
+        },
+        {
+          "t": 4895,
+          "ts": "01:21:35",
+          "player": "그 외",
+          "hidden": false
+        },
+        {
+          "t": 5853,
+          "ts": "01:37:33",
+          "player": "John",
+          "hidden": false
+        },
+        {
+          "t": 6598,
+          "ts": "01:49:58",
+          "player": "그 외",
+          "hidden": false
+        },
+        {
+          "t": 6684,
+          "ts": "01:51:24",
+          "player": "이준영",
+          "hidden": false
+        },
+        {
+          "t": 6805,
+          "ts": "01:53:25",
+          "player": "그 외",
+          "hidden": false
+        },
+        {
+          "t": 7375,
+          "ts": "02:02:55",
+          "player": "나금철",
+          "hidden": false
+        }
+      ]
+    },
+    {
       "id": "7_cJyR2iU54",
       "url": "https://www.youtube.com/watch?v=7_cJyR2iU54",
-      "title": "26년 5월 14일",
+      "title": "[4K] 26년 5월 14일",
       "date": "2026-05-17",
       "goals": [
         {
